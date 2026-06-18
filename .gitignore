@@ -1,0 +1,42 @@
+# --- Sistema di progetto portabile: livello privato e ignorato (sezione 6/10) ---
+# Da unire al .gitignore del progetto. Inserire PRIMA di creare _notes/, altrimenti
+# la cartella finisce indicizzata.
+
+# Livello privato e verboso
+_notes/
+
+# Override personali e permessi personali
+CLAUDE.local.md
+.claude/settings.local.json
+
+# Estratti temporanei dei .docx (cartelle scratch)
+_notes/.tmp-docx-*/
+.tmp-docx-*/
+
+# Documenti Word grezzi (binari). Dichiarare qui le eventuali eccezioni curate, es:
+#   *.docx
+#   !docs/specifica-ufficiale.docx
+*.docx
+
+# Ambiente materializzato (sezione 13): si versiona il manifesto, si ignora il derivato.
+# Python
+.venv/
+__pycache__/
+*.pyc
+# Node
+node_modules/
+
+# --- Specifico di questo progetto (export mail statiche) ---
+# Staging locale dei PST scaricati dall'eDiscovery Export Tool: binari pesanti, derivati,
+# NON vanno versionati. Lo stesso vale per qualunque PST e per i report di transcript locali.
+export-locale/
+*.pst
+*.zip
+# Report di verifica generati localmente (transcript): restano fuori da git.
+fase0-verifica*.txt
+# Script ad-hoc creati in root per verifiche locali una tantum (non parte del tooling versionato).
+/Check-License.ps1
+
+# Temporanei e screenshot effimeri (aggiunti in allineamento)
+*.tmp
+.claude/screenshot_*.png
