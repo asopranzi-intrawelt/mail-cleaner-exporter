@@ -19,22 +19,23 @@
     Radice della destinazione di rete. Default: V:\Archivio-Email. Accetta percorsi UNC.
 
 .PARAMETER Label
-    Sotto-cartella di destinazione (es. Ripa-2026). I file finiscono in <ArchiveRoot>\<Label>.
+    Sotto-cartella di destinazione (es. CasellaB-2026). I file finiscono in <ArchiveRoot>\<Label>.
 
 .PARAMETER WhatIfCopy
     Mostra cosa verrebbe copiato senza eseguire la copia.
 
 .EXAMPLE
-    .\Archive-PstExport.ps1 -SourceDir ..\..\..\..\export-locale -ArchiveRoot V:\Archivio-Email -Label Ripa-2026
+    .\Archive-PstExport.ps1 -SourceDir ..\..\..\..\export-locale -ArchiveRoot V:\Archivio-Email -Label CasellaB-2026
 
 .EXAMPLE
-    .\Archive-PstExport.ps1 -SourceDir D:\staging -ArchiveRoot \\nas\archivio -Label Ripa-2026
+    .\Archive-PstExport.ps1 -SourceDir D:\staging -ArchiveRoot \\nas\archivio -Label CasellaB-2026
 #>
 [CmdletBinding()]
 param(
     [Parameter(Mandatory)][string]$SourceDir,
     [string]$ArchiveRoot = 'V:\Archivio-Email',
     [Parameter(Mandatory)][string]$Label,
+    [string]$NameLike = '*',
     [switch]$WhatIfCopy
 )
 
@@ -42,8 +43,8 @@ $ErrorActionPreference = 'Stop'
 
 if (-not (Test-Path -LiteralPath $SourceDir)) { throw "SourceDir non trovata: $SourceDir" }
 
-$psts = Get-ChildItem -LiteralPath $SourceDir -Recurse -Filter *.pst -File
-if (-not $psts) { throw "Nessun file .pst trovato in $SourceDir" }
+$psts = Get-ChildItem -LiteralPath $SourceDir -Recurse -Filter *.pst -File | Where-Object { $_.Name -like $NameLike }
+if (-not $psts) { throw "Nessun file .pst trovato in $SourceDir (NameLike '$NameLike')" }
 
 $dest = Join-Path $ArchiveRoot $Label
 Write-Host "== Archiviazione di $($psts.Count) PST ==" -ForegroundColor Cyan

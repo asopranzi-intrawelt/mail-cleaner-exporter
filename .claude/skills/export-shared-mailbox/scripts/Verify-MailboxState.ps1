@@ -46,7 +46,7 @@
 #>
 [CmdletBinding()]
 param(
-    [string[]]$Mailboxes = @('mmartinelli@intrawelt.com','roripa@intrawelt.com'),
+    [string[]]$Mailboxes = @('casella-a@intrawelt.com','casella-b@intrawelt.com'),
     [string]$UserPrincipalName = 'asopranzi@intrawelt.com',
     [string]$AppId,
     [string]$CertificateThumbprint,

@@ -27,11 +27,14 @@
     Cartella con i PST da verificare. Default: lo staging export-locale\ del progetto.
 
 .PARAMETER Expected
-    Hashtable label -> item attesi (totale casella). Default: i numeri di Fase 0 (2026-06-12).
+    Hashtable label -> item attesi per casella. Default vuoto: passare i conteggi reali, es.
+    -Expected @{ CasellaA = 12345; CasellaB = 67890 }. Senza, lo script elenca i conteggi per file
+    senza emettere un verdetto per casella.
 
 .PARAMETER LabelMap
     Hashtable label -> regex sul nome file per assegnare un PST a una casella.
-    Default: 'Martinelli' e 'Ripa' cercati nel nome file (case-insensitive).
+    Default vuoto: passare -LabelMap @{ CasellaA = 'CasellaA'; CasellaB = 'CasellaB' } per raggruppare
+    i PST per casella in base a un frammento del nome file (case-insensitive).
 
 .PARAMETER TolerancePercent
     Ammanco percentuale entro cui l'export e' considerato OK. Default 3.
@@ -47,8 +50,8 @@
 [CmdletBinding()]
 param(
     [string]$SourceDir,
-    [hashtable]$Expected = @{ 'Martinelli' = 131870; 'Ripa' = 140334 },
-    [hashtable]$LabelMap = @{ 'Martinelli' = 'Martinelli'; 'Ripa' = 'Ripa' },
+    [hashtable]$Expected = @{},
+    [hashtable]$LabelMap = @{},
     [double]$TolerancePercent = 3,
     [string]$NameLike = '*'
 )
@@ -77,11 +80,24 @@ if ($pstFiles.Count -eq 0) {
 if ($NameLike -ne '*') { Write-Host ("Filtro file    : {0}" -f $NameLike) }
 
 # --- Outlook COM ---
-# Se Outlook non e' gia' in esecuzione, lo avvia lo script: in quel caso va chiuso alla fine
-# (altrimenti il processo resta vivo e tiene bloccati i PST). Se invece e' gia' aperto
-# (istanza dell'utente), NON va chiuso.
-$outlookWasRunning = [bool](Get-Process outlook -ErrorAction SilentlyContinue)
-$outlook = New-Object -ComObject Outlook.Application
+# Lo script conta aprendo i PST via automazione e richiede uno stato pulito. Se un'istanza di Outlook
+# e' in esecuzione (inclusi i processi "fantasma" lasciati da un run precedente o un Outlook chiuso
+# da pochi secondi e non ancora terminato), la creazione dell'oggetto COM fallisce con 0x80080005
+# (CO_E_SERVER_EXEC_FAILURE). Si forza quindi la chiusura, si attende la fine effettiva del processo,
+# poi si avvia un'istanza propria con un paio di tentativi; l'istanza viene chiusa in coda.
+Get-Process outlook -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+$waited = 0
+while ((Get-Process outlook -ErrorAction SilentlyContinue) -and $waited -lt 15) { Start-Sleep -Seconds 1; $waited++ }
+$outlook = $null
+for ($try = 1; $try -le 3 -and -not $outlook; $try++) {
+    try { $outlook = New-Object -ComObject Outlook.Application }
+    catch { Start-Sleep -Seconds 3 }
+}
+if (-not $outlook) {
+    Write-Warning "Impossibile avviare Outlook via COM (0x80080005). Chiudi Outlook manualmente e riprova."
+    Stop-Transcript | Out-Null
+    return
+}
 $ns = $outlook.GetNamespace('MAPI')
 
 # Mappa dei PST gia' caricati in Outlook (per non riaprirli/rimuoverli)
@@ -174,7 +190,12 @@ else        { Write-Host "Almeno una casella e' sotto soglia o mancante: NON arc
 Write-Host ("`nReport salvato in: {0}" -f $report) -ForegroundColor Cyan
 
 Stop-Transcript | Out-Null
-if (-not $outlookWasRunning) { try { $outlook.Quit() } catch {} }
+# L'istanza l'ha avviata lo script (ha forzato uno stato pulito a inizio): va sempre chiusa.
+try { $outlook.Quit() } catch {}
 try { [System.Runtime.InteropServices.Marshal]::ReleaseComObject($ns) | Out-Null } catch {}
 try { [System.Runtime.InteropServices.Marshal]::ReleaseComObject($outlook) | Out-Null } catch {}
 [GC]::Collect(); [GC]::WaitForPendingFinalizers()
+# Rete di sicurezza: se l'istanza COM non e' terminata, la si forza, cosi' il prossimo avvio di
+# Outlook (manuale, per l'export successivo) non trova un processo che lo blocca.
+Start-Sleep -Seconds 2
+Get-Process outlook -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue

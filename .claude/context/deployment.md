@@ -38,9 +38,9 @@ Install-Module ExchangeOnlineManagement -Scope CurrentUser
 
 # Fase 4 — archiviazione con checksum, una sottocartella per casella sotto V:\Archivio-Email
 .\.claude\skills\export-shared-mailbox\scripts\Archive-PstExport.ps1 `
-    -SourceDir .\export-locale\Martinelli -ArchiveRoot V:\Archivio-Email -Label Martinelli-2026
+    -SourceDir .\export-locale\Casella A -ArchiveRoot V:\Archivio-Email -Label Casella A-2026
 .\.claude\skills\export-shared-mailbox\scripts\Archive-PstExport.ps1 `
-    -SourceDir .\export-locale\Ripa -ArchiveRoot V:\Archivio-Email -Label Ripa-2026
+    -SourceDir .\export-locale\Casella B -ArchiveRoot V:\Archivio-Email -Label Casella B-2026
 ```
 
 Le Fasi 1-3 (export PST) sono manuali nel portale Purview: vedi il runbook in

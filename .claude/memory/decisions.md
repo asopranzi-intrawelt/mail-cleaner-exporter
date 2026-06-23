@@ -130,3 +130,36 @@ alzato via registro (`MaxLargeFileSize`/`WarnLargeFileSize`). AutoExpandingArchi
 le caselle (Fase 0) garantisce che gli archivi siano esportabili da Outlook. Se la verifica dei
 conteggi rivelasse un ammanco oltre tolleranza non recuperabile, si rivaluta l'acquisto di una E3
 temporanea per tornare a eDiscovery.
+
+## ADR-008 — Verifica di completezza per conteggio item e gestione delle cartelle grandi a tranche
+
+Data: 2026-06-19
+Stato: accettata
+Contesto: durante l'esecuzione dell'export Outlook (ADR-007) sono emersi due fatti sul campo. Primo,
+la dimensione del PST non e' indicatore di completezza: un export interrotto da una caduta di rete
+lascia un file stabile ma troncato, che "sembra finito". E' successo due volte su una cartella di
+archivio online grande e piatta (Casella B "Posta inviata", ~51.000 item / ~38 GB), che in flusso unico
+non completa per throttling/disconnessioni, dato che l'archivio online non e' messo in cache e viene
+scaricato in streaming. Secondo, il confronto del totale PST col totale grezzo di Fase 0
+(Get-MailboxStatistics) e' inaffidabile: produce falsi positivi perche' quel totale include item
+non esportabili (cartelle di sistema come PersonMetadata, Elementi ripristinabili del dumpster) e
+perche' Get-MailboxStatistics e Get-MailboxFolderStatistics contano in modo diverso.
+Decisione: (1) la completezza si verifica per CONTEGGIO ITEM, non per dimensione; (2) la baseline
+non e' il totale di Fase 0 ma la somma delle cartelle realmente esportabili ricavata da
+Get-MailboxFolderStatistics, escludendo le RecoverableItems*, PersonMetadata, Audits, la radice e le
+cartelle a 0 item, confrontando idealmente cartella per cartella; (3) le cartelle di archivio grandi
+e piatte (senza sottocartelle su cui spezzare) si esportano a TRANCHE PER DATA, tramite il filtro
+della procedura guidata (scheda Avanzate -> campo "Inviato"/"Ricevuto", condizione "tra", valore
+"gg/mm/aaaa e gg/mm/aaaa"), dimensionando le tranche a circa 2 anni / ~13 GB; la somma dei conteggi
+delle tranche deve eguagliare il conteggio della cartella sul server (ne' buchi ne' doppioni).
+Motivazione: e' l'unico modo per distinguere un export completo da uno troncato e per chiudere la
+verifica in modo netto invece che "al limite della tolleranza"; le tranche piccole completano dove
+il flusso unico cade e isolano l'eventuale tranche da rifare.
+Conseguenze: lo script `Verify-PstCompleteness.ps1` resta utile come screening per file e per
+casella, ma il suo verdetto a tolleranza 3% sul totale di Fase 0 e' indicativo, non probante; la
+prova e' il confronto con la baseline esportabile. Aggiunto a quello script il parametro -NameLike
+(conteggio mirato) e una chiusura COM piu' pulita; resta da rendere la chiusura di Outlook
+totalmente affidabile (oggi mitigata con `Stop-Process outlook` tra un export e l'altro). I CSV
+`fase0-*-folders.csv`, i report `completeness-check-*` e gli screenshot sono archiviati come evidenza
+in `_notes/audit-export-2026/` (locale, non committato, con README di riepilogo); `export-locale/`
+resta riservato ai soli PST in transito verso V:.

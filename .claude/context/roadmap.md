@@ -19,7 +19,7 @@ VM centralizzata, con verifica di integrità dell'archivio.
 
 ## Priorità
 
-1. Completare l'export delle caselle `mmartinelli@` e `roripa@` (vedi `current-work.md`): è il
+1. Completare l'export delle caselle `casella-a@` e `casella-b@` (vedi `current-work.md`): è il
    caso che ha originato il progetto e libera spazio su caselle al 100%.
 2. Definire la procedura, separata e da autorizzare, di **svuotamento** delle caselle dopo la
    verifica dell'archivio, tenendo conto degli hold/retention (con hold attivo la cancellazione
