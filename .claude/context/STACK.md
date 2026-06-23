@@ -53,8 +53,8 @@ prima, integrità dopo).
 
 ## Riferimenti a snippet
 
-- `Verify-MailboxState.ps1` — parametro `-Mailboxes` (default `mmartinelli@intrawelt.com`,
-  `roripa@intrawelt.com`); auth interattiva di default, oppure app-only con
+- `Verify-MailboxState.ps1` — parametro `-Mailboxes` (default `casella-a@intrawelt.com`,
+  `casella-b@intrawelt.com`); auth interattiva di default, oppure app-only con
   `-AppId` / `-CertificateThumbprint` / `-Organization`.
 - `Archive-PstExport.ps1` — parametri `-SourceDir` (staging locale) e `-ArchiveRoot` (default
   `V:\Archivio-Email`, accetta percorsi UNC), parametro `-Label` per la sotto-cartella.

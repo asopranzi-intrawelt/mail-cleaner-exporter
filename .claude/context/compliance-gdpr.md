@@ -41,9 +41,9 @@ e valutare la nomina di un RPD se ricorrono i presupposti dell'art. 37 GDPR.
 
 ## Punto 1 (EVIDENZIATO) — Soggetti e natura delle caselle
 
-- `mmartinelli@intrawelt.com` — **ex dipendente** (Mery Martinelli). Casella di tipo SharedMailbox,
+- `casella-a@intrawelt.com` — **ex dipendente** (Casella A). Casella di tipo SharedMailbox,
   intestata al nominativo della persona.
-- `roripa@intrawelt.com` — **ex dipendente** (Roberta Ripa). Casella di tipo SharedMailbox,
+- `casella-b@intrawelt.com` — **ex dipendente** (Casella B). Casella di tipo SharedMailbox,
   intestata al nominativo della persona.
 
 Essendo intestate a nominativi, è plausibile che fossero caselle **personali poi convertite a
@@ -117,11 +117,11 @@ Accesso all'archivio:    chi può accedere a V:\Archivio-Email e con quali perme
 
 | Data | Operatore | Azione | Dettaglio | Esito |
 |---|---|---|---|---|
-| 2026-06-12 | asopranzi@intrawelt.com | Verifica Fase 0 (read-only) | Get-EXOMailbox/Statistics su mmartinelli@, roripa@; lettura retention policy | OK, nessun hold; report in export-locale/ |
+| 2026-06-12 | asopranzi@intrawelt.com | Verifica Fase 0 (read-only) | Get-EXOMailbox/Statistics su casella-a@, casella-b@; lettura retention policy | OK, nessun hold; report in export-locale/ |
 | 2026-06-12 | asopranzi@intrawelt.com | Verifica account operatore it@ | it@ non autenticabile (probabile shared mailbox) → operatore = asopranzi@ | Deciso |
 | 2026-06-12 | asopranzi@intrawelt.com | Verifica ruolo Export (eDiscovery Manager) | asopranzi è "Amministratore di eDiscovery" (include ruolo Export); anche Tommaso Vezeni admin | OK |
 | | | Creazione caso eDiscovery | nome caso: | DA COMPILARE |
-| | | Ricerca Export-Martinelli | conteggio item: | DA COMPILARE |
-| | | Ricerca Export-Ripa | conteggio item: | DA COMPILARE |
+| | | Ricerca Export-Casella A | conteggio item: | DA COMPILARE |
+| | | Ricerca Export-Casella B | conteggio item: | DA COMPILARE |
 | | | Export PST + download | percorso staging: | DA COMPILARE |
 | | | Copia verificata su V: | label/checksum: | DA COMPILARE |

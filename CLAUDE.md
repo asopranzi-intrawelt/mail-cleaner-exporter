@@ -9,9 +9,10 @@
 Toolkit operativo riusabile per **esportare in modo statico le caselle di Exchange Online**
 (Microsoft 365, tenant Intrawelt) verso una risorsa di rete, allo scopo di archiviare la posta
 prima di liberarne lo spazio. Il metodo di riferimento è **Microsoft Purview eDiscovery → export
-PST** (lato server), corredato da script PowerShell per la verifica preliminare in sola lettura e
+PST** (lato server); nel caso reale, mancando la licenza E3/E5 sull'operatore, si è ripiegati sull'export
+da **Outlook classico** (vedi ADR-007 e SKILL.md). Il tutto è corredato da script PowerShell per la verifica preliminare in sola lettura e
 per l'archiviazione con checksum. Caso d'uso che ha originato il progetto: le caselle condivise
-`mmartinelli@intrawelt.com` e `roripa@intrawelt.com`, piene al 100% (primaria + archivio online).
+`casella-a@intrawelt.com` e `casella-b@intrawelt.com`, piene al 100% (primaria + archivio online).
 
 ## Procedura di ripresa in una sessione nuova
 
@@ -42,7 +43,7 @@ Schede tecniche, sotto `.claude/context/`, con frontmatter di riconciliazione.
 .claude/context/design-and-security.md  paradigmi e sicurezza (read-only, niente segreti)
 .claude/context/deployment.md           dove gira e con quali prerequisiti
 .claude/context/dev-testing.md          come si prova il tooling
-.claude/context/current-work.md         export attivo (caselle Ripa/Martinelli)
+.claude/context/current-work.md         export attivo (caselle Casella B/Casella A)
 .claude/context/roadmap.md              direzione e priorità
 .claude/context/compliance-gdpr.md      conformità GDPR/privacy + registro azioni Purview
 ```
@@ -50,7 +51,8 @@ Schede tecniche, sotto `.claude/context/`, con frontmatter di riconciliazione.
 Procedura operativa riusabile, come skill:
 
 ```
-.claude/skills/export-shared-mailbox/SKILL.md   runbook completo Fasi 0-4 + script
+.claude/skills/export-shared-mailbox/SKILL.md             runbook completo Fasi 0-4 + script + troubleshooting
+.claude/skills/export-shared-mailbox/SVUOTAMENTO-CASELLE.md  guida alla cancellazione (fase separata, da autorizzare)
 ```
 
 Regole modulari caricate su necessità, sotto `.claude/rules/`, e skill del motore, sotto
