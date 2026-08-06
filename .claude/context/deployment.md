@@ -9,23 +9,14 @@ last-verified-commit: PENDING-FIRST-COMMIT
 
 # Deployment
 
-> Popolare leggendo la configurazione reale di infrastruttura e CI. Commit, push e deploy restano
-> operazioni manuali dell'utente.
+> Popolare leggendo la configurazione reale di infrastruttura e CI. Commit, push e deploy restano operazioni manuali dell'utente.
 
 ## Livelli
 
-Non è un servizio: è un toolkit eseguito a mano da un amministratore. Due ambienti di esecuzione
-previsti.
+Non è un servizio: è un toolkit eseguito a mano da un amministratore. Due ambienti di esecuzione previsti.
 
-- **Oggi — workstation Windows**: gli script girano sul PC dell'amministratore. La destinazione
-  di archivio è `V:\`, NAS mappato come unità di rete su questa macchina. Lo staging locale dei
-  PST scaricati sta in `D:\mail-cleaner-exporter\export-locale\` (ignorato da git).
-- **Futuro — VM su Proxmox in LAN** (da verificare): si valuta di deployare il progetto in una VM
-  su un server Proxmox connesso in LAN, per eseguire gli export in modo centralizzato. In quel
-  contesto la destinazione di rete sarà passata come percorso UNC verso il NAS
-  (`-ArchiveRoot \\<server>\<share>\...`) invece di un'unità mappata, e l'autenticazione sarà
-  app-only con certificato (`-AppId`/`-CertificateThumbprint`/`-Organization`), perché in una VM
-  senza sessione interattiva l'auth interattiva (broker WAM) non è praticabile. Vedi ADR-005 e ADR-004.
+- **Oggi — workstation Windows**: gli script girano sul PC dell'amministratore. La destinazione di archivio è `V:\`, NAS mappato come unità di rete su questa macchina. Lo staging locale dei PST scaricati sta in `D:\mail-cleaner-exporter\export-locale\` (ignorato da git).
+- **Futuro — VM su Proxmox in LAN** (da verificare): si valuta di deployare il progetto in una VM su un server Proxmox connesso in LAN, per eseguire gli export in modo centralizzato. In quel contesto la destinazione di rete sarà passata come percorso UNC verso il NAS (`-ArchiveRoot \\<server>\<share>\...`) invece di un'unità mappata, e l'autenticazione sarà app-only con certificato (`-AppId`/`-CertificateThumbprint`/`-Organization`), perché in una VM senza sessione interattiva l'auth interattiva (broker WAM) non è praticabile. Vedi ADR-005 e ADR-004.
 
 ## Comandi
 
@@ -43,11 +34,8 @@ Install-Module ExchangeOnlineManagement -Scope CurrentUser
     -SourceDir .\export-locale\Casella B -ArchiveRoot V:\Archivio-Email -Label Casella B-2026
 ```
 
-Le Fasi 1-3 (export PST) sono manuali nel portale Purview: vedi il runbook in
-`.claude/skills/export-shared-mailbox/SKILL.md`.
+Le Fasi 1-3 (export PST) sono manuali nel portale Purview: vedi il runbook in `.claude/skills/export-shared-mailbox/SKILL.md`.
 
 ## Variabili d'ambiente e segreti
 
-Nessuna variabile d'ambiente richiesta e nessun segreto sul disco. L'account di esecuzione deve
-avere i ruoli Microsoft 365 adeguati: lettura mailbox per la Fase 0, ruolo Export (gruppo
-eDiscovery Manager) per l'export.
+Nessuna variabile d'ambiente richiesta e nessun segreto sul disco. L'account di esecuzione deve avere i ruoli Microsoft 365 adeguati: lettura mailbox per la Fase 0, ruolo Export (gruppo eDiscovery Manager) per l'export.

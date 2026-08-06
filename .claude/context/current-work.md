@@ -10,15 +10,11 @@ stato: completato (export verificato e archiviato 2026-06-22)
 
 # Lavoro in corso
 
-> La fonte di verità su cosa è fatto resta `memory/index.md` e il work-log, non le spunte di
-> questo file.
+> La fonte di verità su cosa è fatto resta `memory/index.md` e il work-log, non le spunte di questo file.
 
 ## Feature: Export statico caselle Casella A & Casella B
 
-Cosa fa: archiviare integralmente (primaria + archivio online) le caselle condivise
-`casella-a@intrawelt.com` e `casella-b@intrawelt.com` in PST sulla destinazione di rete, come
-backup statico. A essere pieno al 100% è l'archivio online (50/50 GB); le primarie hanno spazio.
-Nessuna cancellazione in questa fase.
+Cosa fa: archiviare integralmente (primaria + archivio online) le caselle condivise `casella-a@intrawelt.com` e `casella-b@intrawelt.com` in PST sulla destinazione di rete, come backup statico. A essere pieno al 100% è l'archivio online (50/50 GB); le primarie hanno spazio. Nessuna cancellazione in questa fase.
 
 Numeri di riferimento (Fase 0, 2026-06-12) — completezza attesa dell'export PST:
 
@@ -54,20 +50,10 @@ Definition of done:
 
 Domande aperte:
 
-- Stato hold/retention: VERIFICATO in Fase 0 — nessun hold sulle due caselle. Restano tre
-  retention policy a livello tenant (due attive) non applicate a queste caselle; da riconfermare
-  comunque prima dell'eventuale svuotamento futuro.
-- Destinazione di archivio (USATA): `\\NAS-INTRA3\Public\Archivio-Email\CasellaA-2026` e
-  `...\CasellaB-2026`. Si è usato il percorso UNC e non la lettera `V:` perché la finestra
-  PowerShell elevata non vedeva l'unità mappata dall'utente normale (vedi troubleshooting in
-  SKILL.md). Lo staging `export-locale\` è da svuotare ora che la copia è verificata.
+- Stato hold/retention: VERIFICATO in Fase 0 — nessun hold sulle due caselle. Restano tre retention policy a livello tenant (due attive) non applicate a queste caselle; da riconfermare comunque prima dell'eventuale svuotamento futuro.
+- Destinazione di archivio (USATA): `\\NAS-INTRA3\Public\Archivio-Email\CasellaA-2026` e `...\CasellaB-2026`. Si è usato il percorso UNC e non la lettera `V:` perché la finestra PowerShell elevata non vedeva l'unità mappata dall'utente normale (vedi troubleshooting in SKILL.md). Lo staging `export-locale\` è da svuotare ora che la copia è verificata.
 
-Esito finale (2026-06-22): export completo e integro. Casella A 127.740 item nei PST (archivio
-82.400 = baseline esportabile, esatto; primaria 45.340). Casella B ~132.717 (Posta inviata 51.184
-esatti in 3 tranche per data; Posta in arrivo 40.404 in 2 tranche, meno 15 messaggi con data
-anomala; cartelle piccole tutte esatte; primaria 40.706). Lo scarto rispetto ai totali grezzi di
-Fase 0 è interamente non-posta (dumpster, cartelle di sistema, metodo di conteggio). Dettaglio nel
-work-log e nelle evidenze in `_notes/audit-export-2026/`.
+Esito finale (2026-06-22): export completo e integro. Casella A 127.740 item nei PST (archivio 82.400 = baseline esportabile, esatto; primaria 45.340). Casella B ~132.717 (Posta inviata 51.184 esatti in 3 tranche per data; Posta in arrivo 40.404 in 2 tranche, meno 15 messaggi con data anomala; cartelle piccole tutte esatte; primaria 40.706). Lo scarto rispetto ai totali grezzi di Fase 0 è interamente non-posta (dumpster, cartelle di sistema, metodo di conteggio). Dettaglio nel work-log e nelle evidenze in `_notes/audit-export-2026/`.
 
 ## Riconciliazione
 

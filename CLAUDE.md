@@ -1,30 +1,14 @@
 # mail-cleaner-exporter
 
-> Istruzioni di team, versionate. Questo file è l'indice del progetto: indicizza i soli file
-> satellite tracciati e descrive la procedura di ripresa. Le preferenze personali vivono in
-> `CLAUDE.local.md`, ignorato da git, non qui.
+> Istruzioni di team, versionate. Questo file è l'indice del progetto: indicizza i soli file satellite tracciati e descrive la procedura di ripresa. Le preferenze personali vivono in `CLAUDE.local.md`, ignorato da git, non qui.
 
 ## Cos'è questo progetto
 
-Toolkit operativo riusabile per **esportare in modo statico le caselle di Exchange Online**
-(Microsoft 365, tenant Intrawelt) verso una risorsa di rete, allo scopo di archiviare la posta
-prima di liberarne lo spazio. Il metodo di riferimento è **Microsoft Purview eDiscovery → export
-PST** (lato server); nel caso reale, mancando la licenza E3/E5 sull'operatore, si è ripiegati sull'export
-da **Outlook classico** (vedi ADR-007 e SKILL.md). Il tutto è corredato da script PowerShell per la verifica preliminare in sola lettura e
-per l'archiviazione con checksum. Caso d'uso che ha originato il progetto: le caselle condivise
-`casella-a@intrawelt.com` e `casella-b@intrawelt.com`, piene al 100% (primaria + archivio online).
+Toolkit operativo riusabile per **esportare in modo statico le caselle di Exchange Online** (Microsoft 365, tenant Intrawelt) verso una risorsa di rete, allo scopo di archiviare la posta prima di liberarne lo spazio. Il metodo di riferimento è **Microsoft Purview eDiscovery → export PST** (lato server); nel caso reale, mancando la licenza E3/E5 sull'operatore, si è ripiegati sull'export da **Outlook classico** (vedi ADR-007 e SKILL.md). Il tutto è corredato da script PowerShell per la verifica preliminare in sola lettura e per l'archiviazione con checksum. Caso d'uso che ha originato il progetto: le caselle condivise `casella-a@intrawelt.com` e `casella-b@intrawelt.com`, piene al 100% (primaria + archivio online).
 
 ## Procedura di ripresa in una sessione nuova
 
-Lo stato del progetto è interamente recuperabile su disco. All'inizio di una sessione si segue
-questo percorso fisso. Si legge per primo `.claude/memory/index.md`, che dà branch, commit di
-riferimento, stato di verifica di ogni scheda e punto di ripresa. Si legge poi
-`.claude/context/current-work.md` se c'è una feature attiva, per sapere cosa è in lavorazione e
-quali sono i TODO e i limiti d'ambiente. Si invoca la skill `sync-context` per verificare il
-drift tra schede e codice, e si leggono solo le schede pertinenti al task, mai tutte insieme. Il
-work-log `.claude/memory/progress.md` e il registro `.claude/memory/decisions.md` forniscono la
-storia e le decisioni quando servono. Il materiale grezzo sotto `_notes/` si apre solo per
-verificare un requisito originale.
+Lo stato del progetto è interamente recuperabile su disco. All'inizio di una sessione si segue questo percorso fisso. Si legge per primo `.claude/memory/index.md`, che dà branch, commit di riferimento, stato di verifica di ogni scheda e punto di ripresa. Si legge poi `.claude/context/current-work.md` se c'è una feature attiva, per sapere cosa è in lavorazione e quali sono i TODO e i limiti d'ambiente. Si invoca la skill `sync-context` per verificare il drift tra schede e codice, e si leggono solo le schede pertinenti al task, mai tutte insieme. Il work-log `.claude/memory/progress.md` e il registro `.claude/memory/decisions.md` forniscono la storia e le decisioni quando servono. Il materiale grezzo sotto `_notes/` si apre solo per verificare un requisito originale.
 
 ## Indice dei file satellite tracciati
 
@@ -55,22 +39,10 @@ Procedura operativa riusabile, come skill:
 .claude/skills/export-shared-mailbox/SVUOTAMENTO-CASELLE.md  guida alla cancellazione (fase separata, da autorizzare)
 ```
 
-Regole modulari caricate su necessità, sotto `.claude/rules/`, e skill del motore, sotto
-`.claude/skills/`. Lo standard di sistema completo è in `.claude/PROJECT-SYSTEM.md`.
+Regole modulari caricate su necessità, sotto `.claude/rules/`, e skill del motore, sotto `.claude/skills/`. Lo standard di sistema completo è in `.claude/PROJECT-SYSTEM.md`.
 
 ## Vincoli di team
 
-Le operazioni di `git add`, commit e push restano sempre manuali dell'utente: l'agente prepara i
-file, non committa. L'anatomia è pronta per `git init`, con identità locale secondo
-`.claude/rules/git-identity-and-repo.md` (profilo di lavoro `github-corp`,
-asopranzi@intrawelt.com). Repository di destinazione su GitHub:
-`https://github.com/asopranzi-intrawelt/mail-cleaner-exporter`, da agganciare come remote
-`git@github-corp:asopranzi-intrawelt/mail-cleaner-exporter.git`. Lo stile di documentazione e di
-interazione è quello di
-`.claude/rules/interaction-style.md`. Claude non scrive autonomamente nei file di memoria e di
-contesto: li aggiorna solo su richiesta esplicita, così il versionamento resta sotto controllo
-umano.
+Le operazioni di `git add`, commit e push restano sempre manuali dell'utente: l'agente prepara i file, non committa. L'anatomia è pronta per `git init`, con identità locale secondo `.claude/rules/git-identity-and-repo.md` (profilo di lavoro `github-corp`, asopranzi@intrawelt.com). Repository di destinazione su GitHub: `https://github.com/asopranzi-intrawelt/mail-cleaner-exporter`, da agganciare come remote `git@github-corp:asopranzi-intrawelt/mail-cleaner-exporter.git`. Lo stile di documentazione e di interazione è quello di `.claude/rules/interaction-style.md`. Claude non scrive autonomamente nei file di memoria e di contesto: li aggiorna solo su richiesta esplicita, così il versionamento resta sotto controllo umano.
 
-**Vincolo di dominio non negoziabile:** gli script di questo progetto sono di sola lettura ed
-export. Nessuna operazione di cancellazione o svuotamento delle caselle va eseguita senza una
-richiesta esplicita e separata dell'utente, ad archivio già verificato.
+**Vincolo di dominio non negoziabile:** gli script di questo progetto sono di sola lettura ed export. Nessuna operazione di cancellazione o svuotamento delle caselle va eseguita senza una richiesta esplicita e separata dell'utente, ad archivio già verificato.
