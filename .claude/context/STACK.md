@@ -16,12 +16,8 @@ last-verified-commit: PENDING-FIRST-COMMIT
 Toolkit di automazione amministrativa, non un'applicazione. Componenti:
 
 - **PowerShell** (Windows PowerShell 5.1 / PowerShell 7) come linguaggio degli script.
-- **Modulo `ExchangeOnlineManagement`** (rilevata v3.9.2 sulla macchina attuale) per connettersi
-  a Exchange Online e leggere stato e statistiche delle caselle. Connessione interattiva (in una
-  finestra PowerShell reale) oppure app-only con certificato per l'esecuzione headless; il
-  device-code NON esiste in EXO 3.x. Vedi `design-and-security.md` e ADR-005 (supera ADR-003).
-- **Microsoft Purview portal** (purview.microsoft.com), area **eDiscovery**, per l'export PST
-  vero e proprio: passo manuale via browser, non scriptabile interamente (vedi runbook).
+- **Modulo `ExchangeOnlineManagement`** (rilevata v3.9.2 sulla macchina attuale) per connettersi a Exchange Online e leggere stato e statistiche delle caselle. Connessione interattiva (in una finestra PowerShell reale) oppure app-only con certificato per l'esecuzione headless; il device-code NON esiste in EXO 3.x. Vedi `design-and-security.md` e ADR-005 (supera ADR-003).
+- **Microsoft Purview portal** (purview.microsoft.com), area **eDiscovery**, per l'export PST vero e proprio: passo manuale via browser, non scriptabile interamente (vedi runbook).
 - **eDiscovery Export Tool** (app ClickOnce) per scaricare i pacchetti PST.
 
 Nessuna dipendenza da pacchetti di terze parti; nessun runtime applicativo da deployare.
@@ -29,10 +25,8 @@ Nessuna dipendenza da pacchetti di terze parti; nessun runtime applicativo da de
 ## Alternative deliberatamente escluse
 
 - `New-MailboxExportRequest`: solo Exchange on-premises, non disponibile in Exchange Online.
-- `New-ComplianceSearchAction -Export` da PowerShell: il ramo `-Export` è funzionale solo
-  on-prem; in Exchange Online il download passa comunque dal portale.
-- Export via Outlook desktop: inaffidabile su caselle piene e su archivio online (limite PST
-  50 GB di default, archivio spesso non scaricato per intero).
+- `New-ComplianceSearchAction -Export` da PowerShell: il ramo `-Export` è funzionale solo on-prem; in Exchange Online il download passa comunque dal portale.
+- Export via Outlook desktop: inaffidabile su caselle piene e su archivio online (limite PST 50 GB di default, archivio spesso non scaricato per intero).
 
 Motivazioni dettagliate in `.claude/memory/decisions.md` (ADR-002).
 
@@ -47,14 +41,9 @@ Motivazioni dettagliate in `.claude/memory/decisions.md` (ADR-002).
                               rete parametrica e calcola/registra i checksum SHA256
 ```
 
-Le Fasi 1-3 (caso eDiscovery, ricerca, export e download) sono manuali nel portale Purview e
-sono descritte nel `SKILL.md`; gli script coprono le fasi automatizzabili agli estremi (verifica
-prima, integrità dopo).
+Le Fasi 1-3 (caso eDiscovery, ricerca, export e download) sono manuali nel portale Purview e sono descritte nel `SKILL.md`; gli script coprono le fasi automatizzabili agli estremi (verifica prima, integrità dopo).
 
 ## Riferimenti a snippet
 
-- `Verify-MailboxState.ps1` — parametro `-Mailboxes` (default `casella-a@intrawelt.com`,
-  `casella-b@intrawelt.com`); auth interattiva di default, oppure app-only con
-  `-AppId` / `-CertificateThumbprint` / `-Organization`.
-- `Archive-PstExport.ps1` — parametri `-SourceDir` (staging locale) e `-ArchiveRoot` (default
-  `V:\Archivio-Email`, accetta percorsi UNC), parametro `-Label` per la sotto-cartella.
+- `Verify-MailboxState.ps1` — parametro `-Mailboxes` (default `casella-a@intrawelt.com`, `casella-b@intrawelt.com`); auth interattiva di default, oppure app-only con `-AppId` / `-CertificateThumbprint` / `-Organization`.
+- `Archive-PstExport.ps1` — parametri `-SourceDir` (staging locale) e `-ArchiveRoot` (default `V:\Archivio-Email`, accetta percorsi UNC), parametro `-Label` per la sotto-cartella.
